@@ -1,4 +1,4 @@
-(defproject om-dropdown "0.1.0-SNAPSHOT"
+(defproject om-semantic "0.1.0-SNAPSHOT"
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -20,20 +20,30 @@
   :clean-targets ^{:protect false} ["resources/public/js/compiled"]
   
   :cljsbuild {
-    :builds [{:id "dev"
+    :builds [{:id "dropdown"
+              :source-paths ["src" "dev_src" "examples/dropdown"]
+              :compiler {:output-to "examples/dropdown/main.js"
+                         :output-dir "examples/dropdown/out"
+                         :optimizations :none
+                         :main om-semantic.dev
+                         :asset-path "js/compiled/out"
+                         :source-map true
+                         :source-map-timestamp true
+                         :cache-analysis true }}
+             {:id "dev"
               :source-paths ["src" "dev_src"]
-              :compiler {:output-to "resources/public/js/compiled/om_dropdown.js"
+              :compiler {:output-to "resources/public/js/compiled/om_semantic.js"
                          :output-dir "resources/public/js/compiled/out"
                          :optimizations :none
-                         :main om-dropdown.dev
+                         :main om-semantic.dev
                          :asset-path "js/compiled/out"
                          :source-map true
                          :source-map-timestamp true
                          :cache-analysis true }}
              {:id "min"
               :source-paths ["src"]
-              :compiler {:output-to "resources/public/js/compiled/om_dropdown.js"
-                         :main om-dropdown.core                         
+              :compiler {:output-to "resources/public/js/compiled/om_semantic.js"
+                         :main om-semantic.core                         
                          :optimizations :advanced
                          :pretty-print false}}]}
 

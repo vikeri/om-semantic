@@ -1,6 +1,8 @@
-(ns ^:figwheel-always om-dropdown.core
-    (:require[om.core :as om :include-macros true]
-              [om-tools.dom :as dom :include-macros true]))
+(ns ^:figwheel-always examples.dropdown.core
+  (:require-macros [cljs.core.async.macros :refer [go-loop]])
+  (:require[om.core :as om :include-macros true]
+           [cljs.core.async :refer [chan put! <!]]
+           [om-tools.dom :as dom :include-macros true]))
 
 (enable-console-print!)
 
@@ -10,11 +12,11 @@
   (mapv #(hash-map
           :value (clojure.string/lower-case %)
           :label %)
-       ["Viktor"
-        "Sebastian"
-        "Pelle"
-        "Rikard"
-        "Supertramp"]))
+        ["Viktor"
+         "Sebastian"
+         "Pelle"
+         "Rikard"
+         "Supertramp"]))
 
 (defonce app-state (atom {:text "Hello world!"
                           :menu menu}))
@@ -23,9 +25,13 @@
   "Select dropdown item"
   [owner item e]
   (.stopPropagation e)
+  (.preventDefault e)
   (doto owner
     (om/set-state! :open false)
-    (om/set-state! :selected item)))
+    (om/set-state! :selected item))
+  (when-let [chan (om/get-state owner :chan)]
+    (put! chan item)
+    nil))
 
 (defn dropdown-click
   "Dropdown is clicked"
@@ -57,6 +63,11 @@
        :default-text "Select"
        :tabidx 0
        :open false})
+    om/IWillReceiveProps
+    (will-receive-props [_ next-props]
+      (let [next-selected (:selected next-props)]
+        (when-not (= (om/get-state owner :selected) next-selected)
+          (om/set-state! owner :selected next-selected))))
     om/IRenderState
     (render-state [_ state]
       (let [def-text (:default-text state)
@@ -71,8 +82,7 @@
           {:class   "ui selection dropdown"
            :onBlur #(om/set-state! owner :open false)
            :tabIndex (:tabidx state)
-           :onClick #(dropdown-click owner open)
-           }
+           :onClick #(dropdown-click owner open)}
           (dom/input {:type    "hidden"
                       :key     "input"
                       :name    "gender"})
@@ -82,11 +92,34 @@
                     :key "dropdown-menu"}
                    (map itemdiv items)))))))
 
+(defn button
+  [data owner]
+  (om/component
+    (dom/button
+      {:onClick #(om/update! data :selected {:value "sebastian" :label "Sebastian"})}
+      (get-in data [:selected :label]))))
 
 (om/root
-  dropdown
+  (fn [data owner]
+    (reify
+      om/IInitState
+      (init-state [_]
+        {:chan (chan)})
+      om/IWillMount
+      (will-mount [_]
+        (go-loop []
+          (let [selected (<! (om/get-state owner :chan))]
+            (println selected)
+            (om/update! data :selected selected))
+          (recur)))
+      om/IRenderState
+      (render-state [_ state]
+        (println data)
+        (dom/div
+          (om/build button data)
+          (om/build dropdown data {:init-state {:default-text "Välj gubbe"
+                                                :chan         (:chan state)}})))))
   app-state
-  {:init-state {:default-text "Välj gubbe"}
-   :target     (. js/document (getElementById "app"))})
+  {:target (. js/document (getElementById "app"))})
 
 
