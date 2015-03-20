@@ -14,12 +14,13 @@
 
   :source-paths ["src"]
 
-  :clean-targets ^{:protect false} ["resources/public/js/compiled"]
+  :clean-targets ^{:protect false} ["resources/public/js/compiled"
+                                    "examples/dropdown/out"]
   
   :cljsbuild {
     :builds [{:id "dropdown"
               :source-paths ["src" "examples/dropdown/src"]
-              :compiler {:output-to "examples/dropdown/main.js"
+              :compiler {:output-to "examples/dropdown/out/main.js"
                          :output-dir "examples/dropdown/out"
                          :optimizations :none
                          :source-map true}}]}
