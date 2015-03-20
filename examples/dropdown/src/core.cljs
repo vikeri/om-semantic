@@ -32,21 +32,20 @@
     (reify
       om/IRender
       (render [_]
-        (dom/div {:class "ui two column centered grid"}
-                 (dom/div {:class "ui segment column"}
-                          (dom/h1 "Dropdown example")
-                          (om/build button data)
-                          (om/build dd/dropdown
-                                    data
-                                    {:init-state
-                                     {:default-text "Pick Character"}
-                                     :opts
-                                     {:skey :selected
-                                      :mkey :menu
-                                      :idkey :value
-                                      :lkey :label}})
-                          (dom/div {:class "ui divider"})
-                          (dom/div "You picked: "
-                                   (get-in data [:selected :label])))))))
+              (dom/div
+                (dom/h3 "Dropdown example")
+                (om/build button data)
+                (om/build dd/dropdown
+                          data
+                          {:init-state
+                           {:default-text "Pick Character"}
+                           :opts
+                           {:skey  :selected
+                            :mkey  :menu
+                            :idkey :value
+                            :lkey  :label}})
+                ;(dom/br)
+                (dom/span " You picked: "
+                         (get-in data [:selected :label]))))))
   app-state
   {:target (. js/document (getElementById "app"))})
