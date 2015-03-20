@@ -24,7 +24,7 @@
               :compiler {:output-to "resources/public/js/compiled/om_semantic.js"
                          :output-dir "resources/public/js/compiled/out/dropdown"
                          :optimizations :none
-                         :main examples.dropdown.core
+                         :main om-semantic.dev
                          :asset-path "js/compiled/out/dropdown"
                          :source-map true
                          :source-map-timestamp true

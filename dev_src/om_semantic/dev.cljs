@@ -1,6 +1,7 @@
 (ns om-semantic.dev
     (:require
      [om-semantic.dropdown]
+     [examples.dropdown.core]
      [figwheel.client :as fw]))
 
 (fw/start {

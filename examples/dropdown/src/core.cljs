@@ -1,7 +1,5 @@
 (ns ^:figwheel-always examples.dropdown.core
-  (:require-macros [cljs.core.async.macros :refer [go-loop]])
   (:require [om.core :as om :include-macros true]
-            [cljs.core.async :refer [chan <!]]
             [om-semantic.dropdown :as dd]
             [om-tools.dom :as dom :include-macros true]))
 
@@ -19,7 +17,8 @@
          "Rikard"
          "Supertramp"]))
 
-(defonce app-state (atom {:menu menu}))
+(defonce app-state (atom {:menu menu
+                          :selected nil}))
 
 (defn button
   [data owner]
@@ -31,17 +30,8 @@
 (om/root
   (fn [data owner]
     (reify
-      om/IInitState
-      (init-state [_]
-        {:chan (chan)})
-      om/IWillMount
-      (will-mount [_]
-        (go-loop []
-          (let [selected (<! (om/get-state owner :chan))]
-            (om/update! data :selected selected))
-          (recur)))
-      om/IRenderState
-      (render-state [_ state]
+      om/IRender
+      (render [_]
         (dom/div {:class "ui two column centered grid"}
                  (dom/div {:class "ui segment column"}
                           (dom/h1 "Dropdown example")
@@ -49,8 +39,12 @@
                           (om/build dd/dropdown
                                     data
                                     {:init-state
-                                     {:default-text "Pick Character"
-                                      :chan         (:chan state)}})
+                                     {:default-text "Pick Character"}
+                                     :opts
+                                     {:skey :selected
+                                      :mkey :menu
+                                      :idkey :value
+                                      :lkey :label}})
                           (dom/div {:class "ui divider"})
                           (dom/div "You picked: "
                                    (get-in data [:selected :label])))))))
