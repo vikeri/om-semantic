@@ -1,4 +1,4 @@
-(ns ^:figwheel-always examples.dropdown.core
+(ns examples.dropdown.core
   (:require [om.core :as om :include-macros true]
             [om-semantic.dropdown :as dd]
             [om-tools.dom :as dom :include-macros true]))
