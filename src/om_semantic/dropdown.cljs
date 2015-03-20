@@ -1,6 +1,6 @@
 (ns om-semantic.dropdown
   (:require [om.core :as om :include-macros true]
-            [om-tools.dom :as dom :include-macros true]))
+            [om.dom :as dom :include-macros true]))
 
 ;; Utilities - should be moved to separate file when more components are added
 
@@ -38,13 +38,13 @@
   [item owner selected idkey lkey]
   (let [value (get item idkey)
         label (get item lkey)]
-    (dom/div {:class      (str "item"
-                               (when (= value (get selected idkey))
-                                 " active selected"))
-              :key        value
-              :onClick    (fn [e] (dropdown-select owner item e))
-              :data-value value
-              :data-text  label}
+    (dom/div #js {:className      (str "item"
+                                       (when (= value (get selected idkey))
+                                         " active selected"))
+                  :key        value
+                  :onClick    (fn [e] (dropdown-select owner item e))
+                  :data-value value
+                  :data-text  label}
              label)))
 
 ;; Dropdown component
@@ -55,8 +55,9 @@
    skey: the key to the cursor that holds the selected item
    mkey: the key to the cursor that holds the menu items
    idkey: which key in the menu items that should be used as value
-   lkey: which key in the menu items that should be used as label (text)"
-  [data owner {:keys [skey mkey idkey lkey] :as opts}]
+   lkey: which key in the menu items that should be used as label (text)
+   name: the name of the input field"
+  [data owner {:keys [skey mkey idkey lkey name] :as opts}]
   (reify
     om/IDisplayName
     (display-name [_]
@@ -64,7 +65,8 @@
     om/IInitState
     (init-state [_]
       (let [missing (apply disj #{:skey :mkey :idkey :lkey} (keys opts))]
-        (if-not (empty? missing) (jswarn (str "No " (first missing) " set for dropdown"))))
+        (if-not (empty? missing)
+          (jswarn (str "No " (first missing) " set for dropdown"))))
       {:selected-cursor (select-cursor-key data skey)
        :selected (get data skey)
        :default-text "-"
@@ -88,15 +90,15 @@
             text (if selected (get selected lkey) def-text)
             itemdiv #(-itemdiv % owner selected idkey lkey)]
         (dom/div
-          {:class   "ui selection dropdown"
-           :onBlur #(om/set-state! owner :open false)
-           :tabIndex (:tabidx state)
-           :onClick #(dropdown-click owner open)}
-          (dom/input {:type    "hidden"
-                      :key     "input"
-                      :name    "gender"})
-          (dom/i {:class "dropdown icon"})
-          (dom/div {:class tclass} text)
-          (dom/div {:class mclass
-                    :key "dropdown-menu"}
+          #js {:className   "ui selection dropdown"
+               :onBlur #(om/set-state! owner :open false)
+               :tabIndex (:tabidx state)
+               :onClick #(dropdown-click owner open)}
+          (dom/input #js {:type    "hidden"
+                          :key     "input"
+                          :name    name})
+          (dom/i #js {:className "dropdown icon"})
+          (dom/div #js {:className tclass} text)
+          (apply dom/div #js {:className mclass
+                        :key "dropdown-menu"}
                    (map itemdiv items)))))))

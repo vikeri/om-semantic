@@ -1,7 +1,8 @@
 (ns examples.dropdown.core
   (:require [om.core :as om :include-macros true]
             [om-semantic.dropdown :as dd]
-            [om-tools.dom :as dom :include-macros true]))
+            [clojure.string :as str]
+            [om.dom :as dom :include-macros true]))
 
 (enable-console-print!)
 
@@ -9,7 +10,7 @@
 
 (def menu
   (mapv #(hash-map
-          :value (clojure.string/lower-case %)
+          :value (str/lower-case %)
           :label %)
         ["Viktor"
          "Sebastian"
@@ -23,8 +24,8 @@
 (defn button
   [data owner]
   (om/component
-    (dom/div {:class   "ui button"
-              :onClick #(om/update! data :selected (last menu))}
+    (dom/div #js {:className   "ui button"
+                  :onClick #(om/update! data :selected (last menu))}
              (:label (last menu)))))
 
 (om/root
@@ -32,8 +33,8 @@
     (reify
       om/IRender
       (render [_]
-              (dom/div
-                (dom/h3 "Dropdown example")
+              (dom/div nil
+                (dom/h3 nil "Dropdown example")
                 (om/build button data)
                 (om/build dd/dropdown
                           data
@@ -45,7 +46,7 @@
                             :idkey :value
                             :lkey  :label}})
                 ;(dom/br)
-                (dom/span " You picked: "
+                (dom/span nil " You picked: "
                          (get-in data [:selected :label]))))))
   app-state
   {:target (. js/document (getElementById "app"))})
