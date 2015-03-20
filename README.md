@@ -4,6 +4,8 @@
 
 Still very much in Alpha, use at own risk.
 
+Examples: [vikeri.github.io/om-semantic](http://vikeri.github.io/om-semantic/)
+
 ## Available components
 
 - Dropdown `dropdown.cljs`
