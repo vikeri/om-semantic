@@ -1,6 +1,6 @@
 (defproject om-semantic "0.1.1-SNAPSHOT"
   :description "A collection of om-components with the css from Semantic UI"
-  :url "http://example.com/FIXME"
+  :url "https://github.com/vikeri/om-semantic"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
