@@ -4,25 +4,24 @@
 
 ;; Utilities - should be moved to separate file when more components are added
 
-(defn select-cursor-key
-  "As select-key but works for cursors"
-  [coll k]
-  (apply dissoc coll (keys (dissoc coll k))))
-
-(defn jswarn
-  "Throws a javascript warning"
-  [warn]
-  (.warn js/console warn))
+(defn find-key
+  "Matches a key in a map inside a vector against a value and returns map"
+  [-vector -key value]
+  (first (filter #(= (get % -key) value) -vector)))
 
 ;; Dropdown event functions
 
 (defn dropdown-select
   "Select dropdown item"
-  [owner item data e]
+  [owner value data e]
   (.stopPropagation e)
   (.preventDefault e)
   (om/set-state! owner :open false)
-  (om/update! data (om/get-state owner :selected) item))
+  (let [selected (om/get-state owner :selected)
+        cursor   (if (< 1 (count selected))
+                   (get-in data (pop selected))
+                   data)]
+    (om/update! cursor (last selected) value)))
 
 (defn dropdown-click
   "Dropdown is clicked"
@@ -35,10 +34,10 @@
   (let [value (get item idkey)
         label (get item lkey)]
     (dom/div #js {:className (str "item"
-                                       (when (= value (get selected idkey))
+                                       (when (= value selected)
                                          " active selected"))
                   :key        value
-                  :onClick    (fn [e] (dropdown-select owner item data e))
+                  :onClick    (fn [e] (dropdown-select owner value data e))
                   :data-value value
                   :data-text  label}
              label)))
@@ -76,7 +75,8 @@
             selected (get-in data (:selected state))
             tclass (str "text" (when-not selected " default"))
             mclass (str "menu" (when open " transition visible"))
-            text (if selected (get selected lkey) def-text)
+            text (if selected (get (find-key items idkey selected) lkey)
+                              def-text)
             itemdiv #(-itemdiv % owner selected idkey lkey data)]
         (dom/div
           #js {:className   "ui selection dropdown"

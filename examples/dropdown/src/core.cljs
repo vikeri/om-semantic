@@ -25,7 +25,9 @@
   [data owner]
   (om/component
     (dom/div #js {:className "ui button"
-                  :onClick   #(om/update! data :selected (last menu))}
+                  :onClick   #(om/update!
+                               data :selected
+                               (:value (last menu)))}
              (:label (last menu)))))
 
 (om/root
@@ -45,6 +47,9 @@
                             :lkey :label
                             :selected [:selected]}})
                 (dom/span nil " You picked: "
-                         (get-in data [:selected :label]))))))
+                         (get (dd/find-key
+                                (:menu data)
+                                :value
+                                (:selected data)) :label))))))
   app-state
   {:target (. js/document (getElementById "app"))})
