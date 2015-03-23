@@ -18,15 +18,11 @@
 
 (defn dropdown-select
   "Select dropdown item"
-  [owner item e]
+  [owner item data e]
   (.stopPropagation e)
   (.preventDefault e)
-  (doto owner
-    (om/set-state! :open false)
-    (om/set-state! :selected item))
-  (om/update! (om/get-state owner :selected-cursor)
-              (om/get-state owner :skey)
-              item))
+  (om/set-state! owner :open false)
+  (om/update! data (om/get-state owner :selected) item))
 
 (defn dropdown-click
   "Dropdown is clicked"
@@ -35,14 +31,14 @@
 
 (defn -itemdiv
   "Generates item div"
-  [item owner selected idkey lkey]
+  [item owner selected idkey lkey data]
   (let [value (get item idkey)
         label (get item lkey)]
-    (dom/div #js {:className      (str "item"
+    (dom/div #js {:className (str "item"
                                        (when (= value (get selected idkey))
                                          " active selected"))
                   :key        value
-                  :onClick    (fn [e] (dropdown-select owner item e))
+                  :onClick    (fn [e] (dropdown-select owner item data e))
                   :data-value value
                   :data-text  label}
              label)))
@@ -51,44 +47,37 @@
 
 (defn dropdown
   "A simple dropdown component for Om using Semantic UI css
-  opts:
-   skey: the key to the cursor that holds the selected item
-   mkey: the key to the cursor that holds the menu items
+  init-state:
+   selected: kork to the selected item id
+   menu: kork to the menu items
    idkey: which key in the menu items that should be used as value
+   tabidx: tabIndex
+   default-text: What shows if nothing is selected
    lkey: which key in the menu items that should be used as label (text)
    name: the name of the input field"
-  [data owner {:keys [skey mkey idkey lkey name] :as opts}]
+  [data owner]
   (reify
     om/IDisplayName
     (display-name [_]
       "Dropdown")
     om/IInitState
     (init-state [_]
-      (let [missing (apply disj #{:skey :mkey :idkey :lkey} (keys opts))]
-        (if-not (empty? missing)
-          (jswarn (str "No " (first missing) " set for dropdown"))))
-      {:selected-cursor (select-cursor-key data skey)
-       :selected (get data skey)
-       :default-text "-"
-       :skey skey
+      {:default-text "-"
+       :name "dropdown"
        :tabidx 0
        :open false})
-    om/IWillReceiveProps
-    (will-receive-props [_ next-props]
-      (println next-props)
-      (let [next-selected (get next-props skey)]
-        (when-not (= (om/get-state owner :selected) next-selected)
-          (om/set-state! owner :selected next-selected))))
     om/IRenderState
     (render-state [_ state]
       (let [def-text (:default-text state)
-            items (get data mkey)
+            lkey (:lkey state)
+            idkey (:idkey state)
+            items (get-in data (:menu state))
             open (:open state)
-            selected (:selected state)
+            selected (get-in data (:selected state))
             tclass (str "text" (when-not selected " default"))
             mclass (str "menu" (when open " transition visible"))
             text (if selected (get selected lkey) def-text)
-            itemdiv #(-itemdiv % owner selected idkey lkey)]
+            itemdiv #(-itemdiv % owner selected idkey lkey data)]
         (dom/div
           #js {:className   "ui selection dropdown"
                :onBlur #(om/set-state! owner :open false)

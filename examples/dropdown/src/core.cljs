@@ -18,14 +18,14 @@
          "Rikard"
          "Supertramp"]))
 
-(defonce app-state (atom {:menu menu
+(defonce app-state (atom {:menu     menu
                           :selected nil}))
 
 (defn button
   [data owner]
   (om/component
-    (dom/div #js {:className   "ui button"
-                  :onClick #(om/update! data :selected (last menu))}
+    (dom/div #js {:className "ui button"
+                  :onClick   #(om/update! data :selected (last menu))}
              (:label (last menu)))))
 
 (om/root
@@ -39,13 +39,11 @@
                 (om/build dd/dropdown
                           data
                           {:init-state
-                           {:default-text "Pick Character"}
-                           :opts
-                           {:skey  :selected
-                            :mkey  :menu
+                           {:default-text "Pick Character"
+                            :menu [:menu]
                             :idkey :value
-                            :lkey  :label}})
-                ;(dom/br)
+                            :lkey :label
+                            :selected [:selected]}})
                 (dom/span nil " You picked: "
                          (get-in data [:selected :label]))))))
   app-state
