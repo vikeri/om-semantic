@@ -22,6 +22,8 @@
               :source-paths ["src" "examples/dropdown/src"]
               :compiler {:output-to "examples/dropdown/out/main.js"
                          :output-dir "examples/dropdown/out"
+                         :main examples.dropdown.core
+                         :asset-path "out"
                          :optimizations :none
                          :source-map true}}]}
 )
