@@ -51,6 +51,7 @@
    menu: kork to the menu items
    idkey: which key in the menu items that should be used as value
    tabidx: tabIndex
+   disabled: if the dropdown is disabled or not
    default-text: What shows if nothing is selected
    lkey: which key in the menu items that should be used as label (text)
    name: the name of the input field"
@@ -64,29 +65,28 @@
       {:default-text "-"
        :name "dropdown"
        :tabidx 0
+       :disabled false
        :open false})
     om/IRenderState
-    (render-state [_ state]
-      (let [def-text (:default-text state)
-            lkey (:lkey state)
-            idkey (:idkey state)
-            items (get-in data (:menu state))
-            open (:open state)
+    (render-state [_ {:keys [name lkey idkey open disabled
+                             tabidx default-text] :as state}]
+      (let [items (get-in data (:menu state))
             selected (get-in data (:selected state))
             class (str "ui selection dropdown"
-                       (when open " active visible"))
+                       (cond open " active visible"
+                             disabled " disabled"))
             tclass (str "text" (when-not selected " default"))
             text (if selected (get (find-key items idkey selected) lkey)
-                              def-text)
+                              default-text)
             itemdiv #(-itemdiv % owner selected idkey lkey data)]
         (dom/div
           #js {:className class
                :onBlur    #(om/set-state! owner :open false)
-               :tabIndex  (:tabidx state)
-               :onClick   #(dropdown-click owner open)}
+               :tabIndex  tabidx
+               :onClick   (when-not disabled #(dropdown-click owner open))}
           (dom/input #js {:type "hidden"
                           :key  "input"
-                          :name (:name state)})
+                          :name name})
           (dom/i #js {:className "dropdown icon"})
           (dom/div #js {:className tclass} text)
           (when open

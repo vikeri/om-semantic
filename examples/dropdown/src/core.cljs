@@ -45,6 +45,7 @@
                             :menu [:menu]
                             :idkey :value
                             :lkey :label
+                            :disabled false
                             :selected [:selected]}})
                 (dom/span nil " You picked: "
                          (get (dd/find-key
