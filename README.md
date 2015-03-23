@@ -10,6 +10,10 @@ Examples: [vikeri.github.io/om-semantic](http://vikeri.github.io/om-semantic/)
 
 - Dropdown `dropdown.cljs`
 
+## TODO
+
+- Make dropdown tabbable, and to be able to select with up/down keys
+
 
 ## Try it out
 

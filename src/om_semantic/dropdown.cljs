@@ -73,21 +73,23 @@
             items (get-in data (:menu state))
             open (:open state)
             selected (get-in data (:selected state))
+            class (str "ui selection dropdown"
+                       (when open " active visible"))
             tclass (str "text" (when-not selected " default"))
-            mclass (str "menu" (when open " transition visible"))
             text (if selected (get (find-key items idkey selected) lkey)
                               def-text)
             itemdiv #(-itemdiv % owner selected idkey lkey data)]
         (dom/div
-          #js {:className   "ui selection dropdown"
-               :onBlur #(om/set-state! owner :open false)
-               :tabIndex (:tabidx state)
-               :onClick #(dropdown-click owner open)}
-          (dom/input #js {:type    "hidden"
-                          :key     "input"
-                          :name    name})
+          #js {:className class
+               :onBlur    #(om/set-state! owner :open false)
+               :tabIndex  (:tabidx state)
+               :onClick   #(dropdown-click owner open)}
+          (dom/input #js {:type "hidden"
+                          :key  "input"
+                          :name (:name state)})
           (dom/i #js {:className "dropdown icon"})
           (dom/div #js {:className tclass} text)
-          (apply dom/div #js {:className mclass
-                        :key "dropdown-menu"}
-                   (map itemdiv items)))))))
+          (when open
+            (apply dom/div #js {:className "menu transition visible"
+                                :key       "dropdown-menu"}
+                   (map itemdiv items))))))))
