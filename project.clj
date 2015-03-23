@@ -1,4 +1,4 @@
-(defproject om-semantic "0.1.0-SNAPSHOT"
+(defproject om-semantic "0.1.1-SNAPSHOT"
   :description "A collection of om-components with the css from Semantic UI"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
