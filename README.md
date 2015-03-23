@@ -16,7 +16,7 @@ Examples: [vikeri.github.io/om-semantic](http://vikeri.github.io/om-semantic/)
 
 ## Add it as Leiningen dependency
 
-[![Clojars Project](http://clojars.org/om-semantic/latest-version.svg)]
+![Clojars Project](http://clojars.org/om-semantic/latest-version.svg)
 
 ## Try it out
 
