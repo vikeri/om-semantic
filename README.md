@@ -14,6 +14,9 @@ Examples: [vikeri.github.io/om-semantic](http://vikeri.github.io/om-semantic/)
 
 - Make dropdown tabbable, and to be able to select with up/down keys
 
+## Add it as Leiningen dependency
+
+[![Clojars Project](http://clojars.org/om-semantic/latest-version.svg)]
 
 ## Try it out
 
@@ -22,7 +25,6 @@ git clone https://github.com/vikeri/om-semantic.git
 cd om-semantic
 lein cljsbuild once dropdown
 ```
-
 Open `index.html` in folder `examples/dropdown`
 
 ## License
