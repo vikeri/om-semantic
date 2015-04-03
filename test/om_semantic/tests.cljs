@@ -1,6 +1,10 @@
 (ns om-semantic.tests
-  (:require [cljs.test :refer-macros [deftest testing is use-fixtures]]))
+ (:require [cljs.test :refer-macros [run-tests]]
+           [cljs-react-test.utils :as tu]))
 
-(deftest "No tests implemented yet, waiting for async in cljs.test"
-         (testing "Simple test"
-                  (is (= 1 1))))
+(deftest basic-test-handling 
+  (testing "Simple test"
+    (tu/new-container!)
+    (is (= 1 1))))
+
+

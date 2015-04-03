@@ -13,16 +13,26 @@
 
   :source-paths ["src"]
 
-  :clean-targets ^{:protect false} ["resources/public/js/compiled"
+  :clean-targets ^{:protect false} ["target/testable.js"
                                     "examples/dropdown/out"]
   
-  :cljsbuild {
-    :builds [{:id "dropdown"
-              :source-paths ["src" "examples/dropdown/src"]
-              :compiler {:output-to "examples/dropdown/out/main.js"
-                         :output-dir "examples/dropdown/out"
-                         :main examples.dropdown.core
-                         :asset-path "out"
-                         :optimizations :none
-                         :source-map true}}]}
-)
+  :profiles {:test {:dependencies [[cljs-react-test "0.1.0-SNAPSHOT"]]}}
+                 
+  :cljsbuild {:builds [{:id "tests"
+                        :source-paths ["src" "test"]
+                        :notify-command ["phantomjs"
+                                         "vendor/phantom/unit-test.js"
+                                         "vendor/phantom/unit-test.html"]
+                        :compiler {:output-to
+                                   "target/testable.js"
+                                   :optimizations :whitespace
+                                   :cache-analysis false
+                                   :pretty-print true}}
+                       {:id "dropdown"
+                        :source-paths ["examples/dropdown/src"]
+                        :compiler {:output-to "examples/dropdown/out/main.js"
+                                   :output-dir "examples/dropdown/out"
+                                   :main examples.dropdown.core
+                                   :asset-path "out"
+                                   :optimizations :none
+                                   :source-map true}}]})
