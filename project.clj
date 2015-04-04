@@ -7,24 +7,21 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-3126"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [org.omcljs/om "0.8.8"]]
+                 [cljs-react-test "0.1.0-SNAPSHOT"]
+                 [org.omcljs/om "0.8.8" :exclusions [cljsjs/react]]]
 
   :plugins [[lein-cljsbuild "1.0.5"]]
 
   :source-paths ["src"]
 
-  :clean-targets ^{:protect false} ["target/testable.js"
-                                    "examples/dropdown/out"]
+  :clean-targets ^{:protect false} ["target" "examples/dropdown/out"]
   
-  :profiles {:test {:dependencies [[cljs-react-test "0.1.0-SNAPSHOT"]]}}
-                 
   :cljsbuild {:builds [{:id "tests"
                         :source-paths ["src" "test"]
                         :notify-command ["phantomjs"
                                          "vendor/phantom/unit-test.js"
                                          "vendor/phantom/unit-test.html"]
-                        :compiler {:output-to
-                                   "target/testable.js"
+                        :compiler {:output-to "target/testable.js"
                                    :optimizations :whitespace
                                    :cache-analysis false
                                    :pretty-print true}}
