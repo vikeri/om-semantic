@@ -27,6 +27,14 @@ lein cljsbuild once dropdown
 ```
 Open `index.html` in folder `examples/dropdown`
 
+## Testing
+
+To test your changes you need to install PhantomJS and run:
+
+```sh
+lein cljsbuild auto tests
+```
+
 ## License
 
 Licensed under the EPL
