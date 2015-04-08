@@ -2,7 +2,6 @@
   (:require [cljs.test :refer-macros [is testing deftest]]
             [cljs-react-test.simulate :as sim]
             [cljs-react-test.utils :as tu]
-            [dommy.core :as dommy :refer-macros [sel]]
             [om.core :as om :include-macros true]
             [om-semantic.dropdown :as d]))
 
