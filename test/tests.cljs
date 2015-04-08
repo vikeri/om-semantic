@@ -1,9 +1,10 @@
 (ns om-semantic.tests
   (:require [cljs.test :refer-macros [is testing deftest]]
-            [om-semantic.dropdown :as d]
-            [om.core :as om :include-macros true]
+            [cljs-react-test.simulate :as sim]
+            [cljs-react-test.utils :as tu]
             [dommy.core :as dommy :refer-macros [sel]]
-            [cljs-react-test.utils :as tu]))
+            [om.core :as om :include-macros true]
+            [om-semantic.dropdown :as d]))
 
 (enable-console-print!)
 
@@ -22,16 +23,19 @@
           wrapper (fn [data owner]
                     (om/component
                      (om/build d/dropdown data {:init-state init-state})))
-          root (om/root wrapper app-state {:target c})
-          [main-node display-node] (sel c [:div])]
+          rt (om/root wrapper app-state {:target c})
+          react-nodes (tu/find-by-tag rt "div")
+          [main-react display-react] react-nodes 
+          [main-node display-node] (mapv om/get-node react-nodes)]
       (is (= "Joffrey" (.-innerHTML display-node)))
       (testing "and opens on click, showing the options"
-        (tu/click main-node)
+        (sim/click main-node nil)
         (om/render-all)
-        (let [ns (sel c [:div :.menu :div])]
+        (let [ns (drop 1 (tu/find-by-tag (tu/find-one-by-class rt "menu") "div"))
+              ns (map om/get-node ns)]
           (is (= (map :val xs) (map #(.-innerHTML %) ns)))
           (testing "which when clicked change the state"
-            (tu/click (second ns))
+            (sim/click (second ns) nil)
             (om/render-all)
             (is (= (:selected @app-state) (:id (second xs))))
             (is (= (:val (second xs)) (.-innerHTML display-node)))))))))
