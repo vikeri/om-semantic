@@ -25,17 +25,16 @@
 
 (defn dropdown-click
   "Dropdown is clicked"
-  [owner open]
-  (om/set-state! owner :open (not open)))
+  [owner]
+  (om/update-state! owner :open not))
 
 (defn -itemdiv
   "Generates item div"
   [item owner selected idkey lkey data]
   (let [value (get item idkey)
         label (get item lkey)]
-    (dom/div #js {:className (str "item"
-                                       (when (= value selected)
-                                         " active selected"))
+    (dom/div #js {:className (str "item" (if (= value selected)
+                                           " active selected"))
                   :key        value
                   :onClick    (fn [e] (dropdown-select owner value data e))
                   :data-value value
@@ -45,7 +44,7 @@
 ;; Dropdown component
 
 (defn dropdown
-  "A simple dropdown component for Om using Semantic UI css
+  "A simple dropdown component for Om using Semantic UI CSS 
   init-state:
    selected: kork to the selected item id
    menu: kork to the menu items
@@ -74,10 +73,10 @@
       (let [items (get-in data (:menu state))
             selected (get-in data (:selected state))
             class (str "ui selection dropdown "
-                       (when class class)
+                       (if class class)
                        (cond open " active visible"
                              disabled " disabled"))
-            tclass (str "text" (when-not selected " default"))
+            tclass (str "text" (if-not selected " default"))
             text (if selected (get (find-key items idkey selected) lkey)
                               default-text)
             itemdiv #(-itemdiv % owner selected idkey lkey data)]
@@ -85,13 +84,13 @@
           #js {:className class
                :onBlur    #(om/set-state! owner :open false)
                :tabIndex  tabidx
-               :onClick   (when-not disabled #(dropdown-click owner open))}
+               :onClick   (if-not disabled #(dropdown-click owner))}
           (dom/input #js {:type "hidden"
                           :key  "input"
                           :name name})
           (dom/i #js {:className "dropdown icon"})
           (dom/div #js {:className tclass} text)
-          (when open
+          (if open
             (apply dom/div #js {:className "menu transition visible"
                                 :key       "dropdown-menu"}
                    (map itemdiv items))))))))
