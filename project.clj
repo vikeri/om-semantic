@@ -1,4 +1,4 @@
-(defproject om-semantic "0.1.1-SNAPSHOT"
+(defproject om-semantic "0.1.2-SNAPSHOT"
   :description "A collection of om-components with the css from Semantic UI"
   :url "https://github.com/vikeri/om-semantic"
   :license {:name "Eclipse Public License"
