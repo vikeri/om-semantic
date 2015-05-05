@@ -7,6 +7,11 @@
 
 (enable-console-print!)
 
+(defn make-wrapper [init-state]
+  (fn [data owner]
+    (om/component
+      (om/build d/dropdown data {:init-state init-state}))))
+
 (deftest dropdown 
   (testing "Dropdown displays initial state"
     (let [c (tu/new-container!)
@@ -19,9 +24,7 @@
                       :lkey :val
                       :disabled false
                       :selected [:selected]}
-          wrapper (fn [data owner]
-                    (om/component
-                     (om/build d/dropdown data {:init-state init-state})))
+          wrapper (make-wrapper init-state) 
           rt (om/root wrapper app-state {:target c})
           react-nodes (tu/find-by-tag rt "div")
           [main-react display-react] react-nodes 
@@ -37,6 +40,25 @@
             (sim/click (second ns) nil)
             (om/render-all)
             (is (= (:selected @app-state) (:id (second xs))))
-            (is (= (:val (second xs)) (.-innerHTML display-node)))))))))
-
+            (is (= (:val (second xs)) (.-innerHTML display-node))))))
+      (testing "but does nothing else if disabled"
+        (tu/unmount! c)
+        (let [c (tu/new-container!)
+              init-state {:menu [:xs]
+                          :idkey :id
+                          :lkey :val
+                          :disabled true 
+                          :selected [:selected]}
+              app-state (atom {:xs xs :selected 1})
+              wrapper (make-wrapper init-state)
+              rt (om/root wrapper app-state {:target c})
+              react-nodes (tu/find-by-tag rt "div")
+              [main-react display-react] react-nodes 
+              [main-node display-node] (mapv om/get-node react-nodes)]
+          (is (= "Joffrey" (.-innerHTML display-node)))
+          (sim/click main-node nil)
+          (om/render-all)
+          (is (empty? (tu/find-by-class rt "transition")))
+          (is (empty? (tu/find-by-class rt "menu")))
+          (is (empty? (tu/find-by-class rt "visible"))))))))
 
