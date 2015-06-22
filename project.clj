@@ -15,7 +15,7 @@
   :source-paths ["src"]
 
   :clean-targets ^{:protect false} ["target" "examples/dropdown/out"]
-  
+
   :cljsbuild {:builds [{:id "tests"
                         :source-paths ["src" "test"]
                         :notify-command ["phantomjs"

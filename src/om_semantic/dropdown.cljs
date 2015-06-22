@@ -1,5 +1,6 @@
 (ns om-semantic.dropdown
-  (:require [om.core :as om :include-macros true]
+  (:require [cljs.core.async :as async :refer [put!]]
+            [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]))
 
 ;; Utilities - should be moved to separate file when more components are added
@@ -21,11 +22,15 @@
         cursor   (if (< 1 (count selected))
                    (get-in data (pop selected))
                    data)]
+    (when-let [ch (om/get-state owner :ch)]
+      (put! ch [:select value]))
     (om/update! cursor (last selected) value)))
 
 (defn dropdown-click
   "Dropdown is clicked"
   [owner]
+  (when-let [ch (om/get-state owner :ch)]
+    (put! ch [:click nil]))
   (om/update-state! owner :open not))
 
 (defn -itemdiv
@@ -55,7 +60,7 @@
    default-text: What shows if nothing is selected
    lkey: which key in the menu items that should be used as label (text)
    name: the name of the input field"
-  [data owner]
+  [data owner {:keys [ch]}]
   (reify
     om/IDisplayName
     (display-name [_]
@@ -66,7 +71,8 @@
        :name "dropdown"
        :tabidx 0
        :disabled false
-       :open false})
+       :open false
+       :ch ch})
     om/IRenderState
     (render-state [_ {:keys [name lkey idkey open disabled
                              tabidx default-text class] :as state}]
