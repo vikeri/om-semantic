@@ -112,10 +112,11 @@ pass a channel as an `opts` and listen and for `[:click nil]` and
 
 ## Testing
 
-To test your changes you need to install PhantomJS and run:
+This project uses [doo](https://github.com/bensu/doo) for testing. To
+use it follow its README to configure PhantomJS and run:
 
 ```sh
-lein cljsbuild auto tests
+lein doo phantom test
 ```
 
 ## License
