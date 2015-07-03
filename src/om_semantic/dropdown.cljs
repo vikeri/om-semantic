@@ -1,6 +1,8 @@
 (ns om-semantic.dropdown
   (:require [cljs.core.async :as async :refer [put!]]
             [om.core :as om :include-macros true]
+            [goog.style :as style]
+            [goog.dom :as gom]
             [om.dom :as dom :include-macros true]))
 
 ;; Utilities - should be moved to separate file when more components are added
@@ -46,6 +48,27 @@
                   :data-text  label}
              label)))
 
+(defn upward?
+  "Calculates if the dropdown should show upward"
+  [node item-count]
+  (let [node-height (.-height (style/getSize node))
+        dropdown-height (* (+ 1 item-count) node-height)
+        top-offset (.-y (style/getClientPosition node))]
+    (and
+      (< (- dropdown-height node-height) top-offset)
+      (< (.-height (gom/getViewportSize))
+         (+ dropdown-height top-offset)))))
+
+
+(defn set-upward
+  "Checks if the dropdown is too close to the bottom
+  and sets state to go upward if it would be the case"
+  [owner items]
+  (om/set-state! owner
+                  :upward
+                  (upward? (om/get-node owner)
+                           (count items))))
+
 ;; Dropdown component
 
 (defn dropdown
@@ -72,25 +95,32 @@
        :tabidx 0
        :disabled false
        :open false
+       :upward false
        :ch ch})
+    om/IDidMount
+    (did-mount [_]
+      (set-upward owner (get-in data (:menu (om/get-state owner)))))
     om/IRenderState
     (render-state [_ {:keys [name lkey idkey open disabled
-                             tabidx default-text class] :as state}]
+                             tabidx default-text class upward] :as state}]
       (let [items (get-in data (:menu state))
             selected (get-in data (:selected state))
             class (str "ui selection dropdown "
                        (if class class)
+                       (if upward " upward")
                        (cond open " active visible"
                              disabled " disabled"))
             tclass (str "text" (if-not selected " default"))
             text (if selected (get (find-key items idkey selected) lkey)
                               default-text)
-            itemdiv #(-itemdiv % owner selected idkey lkey data)]
+            itemdiv #(-itemdiv % owner selected idkey lkey data)
+            ]
         (dom/div
           #js {:className class
-               :onBlur    #(om/set-state! owner :open false)
-               :tabIndex  tabidx
-               :onClick   (if-not disabled #(dropdown-click owner))}
+               :onBlur #(om/set-state! owner :open false)
+               :tabIndex tabidx
+               :onMouseOver #(set-upward owner items)
+               :onClick (if-not disabled #(dropdown-click owner))}
           (dom/input #js {:type "hidden"
                           :key  "input"
                           :name name})
