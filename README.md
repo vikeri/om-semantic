@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/vikeri/om-semantic.svg?branch=master)](https://travis-ci.org/vikeri/om-semantic)
 ## Om-Semantic
 
 [Semantic UI](https://github.com/semantic-org/semantic-ui/) components built with [Om](https://github.com/omcljs/om)
