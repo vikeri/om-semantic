@@ -1,4 +1,4 @@
-(defproject om-semantic "0.1.3-SNAPSHOT"
+(defproject om-semantic "0.1.4-SNAPSHOT"
   :description "A collection of om-components with the css from Semantic UI"
   :url "https://github.com/vikeri/om-semantic"
   :license {:name "Eclipse Public License"
@@ -7,11 +7,11 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/clojurescript "0.0-3308"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [cljs-react-test "0.1.2-SNAPSHOT"]
-                 [org.omcljs/om "0.8.8" :exclusions [cljsjs/react]]]
+                 [cljs-react-test "0.1.3-SNAPSHOT"]
+                 [org.omcljs/om "0.9.0" :exclusions [cljsjs/react]]]
 
   :plugins [[lein-cljsbuild "1.0.5"]
-            [lein-doo "0.1.1-SNAPSHOT"]]
+            [lein-doo "0.1.2-SNAPSHOT"]]
 
   :source-paths ["src"]
 

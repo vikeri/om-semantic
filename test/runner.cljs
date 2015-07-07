@@ -1,5 +1,5 @@
-(ns test.test-runner
-  (:require [cljs.test :refer [successful?] :refer-macros [run-tests]]
+(ns test.runner
+  (:require [cljs.test]
             [doo.runner :refer-macros [doo-tests]]
             [om-semantic.tests]))
 
