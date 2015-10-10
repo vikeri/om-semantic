@@ -1,8 +1,10 @@
 (ns om-semantic.rating
   (:require [om.core :as om :include-macros true]
-            [om.dom :as dom :include-macros true]))
+            [om.dom :as dom :include-macros true]
+            [jayq.core :refer [$]]))
 
 (enable-console-print!)
+
 
 ;; Rating component
 
@@ -12,6 +14,12 @@
   (reify
     om/IDisplayName
     (display-name [_] "Rating")
+    om/IDidMount
+    (did-mount [_]
+      (-> owner
+          om/get-node
+          $
+          .rating))
     om/IRender
     (render [_]
       (dom/div #js {:className "ui rating"
