@@ -20,6 +20,20 @@
           om/get-node
           $
           .rating))
+    om/IDidUpdate
+    (did-update [_ prev-props prev-state]
+      (let [old-interactive (:interactive prev-props)
+            new-interactive (:interactive data)]
+        (when (not= old-interactive new-interactive)
+          (if new-interactive
+            (-> owner
+                om/get-node
+                $
+                (.rating "enable"))
+            (-> owner
+                om/get-node
+                $
+                (.rating "disable"))))))
     om/IRender
     (render [_]
       (dom/div #js {:className "ui rating"

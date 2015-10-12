@@ -33,7 +33,8 @@
   "Toggle rating's interactivity"
   [data owner]
   (om/component
-   (dom/div #js {:className "ui button"}
+   (dom/div #js {:className "ui button"
+                 :onClick #(om/transact! data :interactive not)}
             "Interactivity: "
             (if (:interactive data) "True" "False"))))
 
@@ -43,7 +44,7 @@
   (om/component
    (dom/div #js {:className "ui button"}
             "Clearability: "
-            (if (:interactive data) "True" "False"))))
+            (if (:clearable data) "True" "False"))))
 
 (defn main-component
   "You can change ratings, toggle interaction and clearability"
