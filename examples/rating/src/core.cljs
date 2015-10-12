@@ -11,7 +11,6 @@
 ;; * a max rating value
 ;; * a current rating value
 (defonce app-state (atom {:interactive true
-                          :clearable true
                           :rating 3
                           :max-rating 5}))
 
@@ -19,14 +18,22 @@
   "Decreases the rating by one"
   [data owner]
   (om/component
-   (dom/div #js {:className "ui button"}
+   (dom/div #js {:className "ui button"
+                 :onClick (fn []
+                            (om/transact! data
+                                          :rating
+                                          #(max 0 (dec %))))}
             "Decrease Rating")))
 
 (defn uprating-button
   "Increases the rating by one"
   [data owner]
   (om/component
-   (dom/div #js {:className "ui button"}
+   (dom/div #js {:className "ui button"
+                 :onClick (fn []
+                            (om/transact! data
+                                          :rating
+                                          #(min (:max-rating data) (inc %))))}
             "Increase Rating")))
 
 (defn interactive-button
@@ -42,9 +49,9 @@
   "Toggle rating's clearability"
   [data owner]
   (om/component
-   (dom/div #js {:className "ui button"}
-            "Clearability: "
-            (if (:clearable data) "True" "False"))))
+   (dom/div #js {:className "ui button"
+                 :onClick #(om/update! data :rating 0)}
+            "Clear Rating")))
 
 (defn main-component
   "You can change ratings, toggle interaction and clearability"

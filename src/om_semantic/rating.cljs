@@ -16,24 +16,34 @@
     (display-name [_] "Rating")
     om/IDidMount
     (did-mount [_]
-      (-> owner
-          om/get-node
-          $
-          .rating))
+      (do
+        (-> owner
+            om/get-node
+            $
+            .rating)
+        (-> owner
+            om/get-node
+            $
+            (.rating "setting" "onRate" #(om/update! data :rating %)))))
     om/IDidUpdate
     (did-update [_ prev-props prev-state]
       (let [old-interactive (:interactive prev-props)
             new-interactive (:interactive data)]
-        (when (not= old-interactive new-interactive)
-          (if new-interactive
-            (-> owner
-                om/get-node
-                $
-                (.rating "enable"))
-            (-> owner
-                om/get-node
-                $
-                (.rating "disable"))))))
+        (do
+          (when (not= old-interactive new-interactive)
+            (if new-interactive
+              (-> owner
+                  om/get-node
+                  $
+                  (.rating "enable"))
+              (-> owner
+                  om/get-node
+                  $
+                  (.rating "disable"))))
+          (-> owner
+              om/get-node
+              $
+              (.rating "set rating" (:rating data))))))
     om/IRender
     (render [_]
       (dom/div #js {:className "ui rating"
