@@ -1,4 +1,4 @@
-(ns om-semantic.tests
+(ns om-semantic.tests.dropdown
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs.test :refer-macros [is testing deftest async]]
             [cljs.core.async :as async :refer [chan put!]]

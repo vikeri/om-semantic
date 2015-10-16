@@ -9,6 +9,7 @@
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [cljs-react-test "0.1.3-SNAPSHOT"]
                  [org.omcljs/om "0.9.0" :exclusions [cljsjs/react]]
+                 [cljsjs/jquery "2.1.4-0"]
                  [jayq "2.5.4"]]
 
   :plugins [[lein-cljsbuild "1.0.5"]
@@ -25,7 +26,10 @@
                         :compiler {:output-to "target/testable.js"
                                    :optimizations :whitespace
                                    :cache-analysis false
-                                   :pretty-print true}}
+                                   :pretty-print true
+                                   :foreign-libs [{:file "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.js"
+                                                   :file-min "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"
+                                                   :provides ["semantic-ui.core"]}]}}
                        {:id "dropdown"
                         :source-paths ["src" "examples/dropdown/src"]
                         :compiler {:output-to "examples/dropdown/out/main.js"
