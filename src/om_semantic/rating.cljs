@@ -3,18 +3,21 @@
             [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]))
 
-(enable-console-print!)
+;; Utility functions
 
-
-;; Rating component
 (defn generate-stars
-  [data rating max-rating]
-  (let [nums (range 1 (inc max-rating))]
+  "Generate star widgets based on current props"
+  [data]
+  (let [rating (:rating data)
+        max-rating (:max-rating data)
+        nums (range 1 (inc max-rating))]
     (map #(dom/i #js {:className (string/join " " ["icon" (if (<= % rating)
                                                             "active")])
                       :onClick (if (:interactive data)
                                  (fn [e] (om/update! data :rating %)) nil)})
          nums)))
+
+;; Rating component
 
 (defn rating
   "A simple rating component for Om using Semantic UI CSS"
