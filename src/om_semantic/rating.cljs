@@ -32,7 +32,7 @@
                         "ui rating disabled")
             rating (:rating data)
             max-rating (:max-rating data)
-            stars (generate-stars data rating max-rating)]
+            stars (generate-stars data)]
         (apply dom/div
                #js {:className className
                     :data-rating (:rating data)
