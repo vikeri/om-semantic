@@ -15,7 +15,9 @@
 
   :source-paths ["src"]
 
-  :clean-targets ^{:protect false} ["target" "examples/dropdown/out"]
+  :clean-targets ^{:protect false} ["target"
+                                    "examples/dropdown/out"
+                                    "examples/rating/out"]
 
   :cljsbuild {:builds [{:id "test"
                         :source-paths ["src" "test"]
@@ -24,10 +26,18 @@
                                    :cache-analysis false
                                    :pretty-print true}}
                        {:id "dropdown"
-                        :source-paths ["examples/dropdown/src"]
+                        :source-paths ["src" "examples/dropdown/src"]
                         :compiler {:output-to "examples/dropdown/out/main.js"
                                    :output-dir "examples/dropdown/out"
                                    :main examples.dropdown.core
+                                   :asset-path "out"
+                                   :optimizations :none
+                                   :source-map true}}
+                       {:id "rating"
+                        :source-paths ["src" "examples/rating/src"]
+                        :compiler {:output-to "examples/rating/out/main.js"
+                                   :output-dir "examples/rating/out"
+                                   :main examples.rating.core
                                    :asset-path "out"
                                    :optimizations :none
                                    :source-map true}}]})
