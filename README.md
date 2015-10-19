@@ -10,10 +10,13 @@ Examples: [vikeri.github.io/om-semantic](http://vikeri.github.io/om-semantic/)
 ## Available components
 
 - Dropdown `dropdown.cljs`
+- Rating `rating.cljs`
 
 ## TODO
 
 - Make dropdown tabbable, and to be able to select with up/down keys
+- Give rating widget the ability to set 0 stars via clicking
+- Allow rating widget to use other icons, not just stars
 
 ## Add it as Leiningen dependency
 
