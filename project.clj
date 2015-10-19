@@ -10,12 +10,13 @@
                  [cljs-react-test "0.1.3-SNAPSHOT"]
                  [org.omcljs/om "0.9.0" :exclusions [cljsjs/react]]]
 
-  :plugins [[lein-cljsbuild "1.0.5"]
+  :plugins [[lein-cljsbuild "1.1.0"]
             [lein-doo "0.1.2-SNAPSHOT"]]
 
   :source-paths ["src"]
 
   :clean-targets ^{:protect false} ["target"
+                                    "examples/out"
                                     "examples/dropdown/out"
                                     "examples/rating/out"]
 
@@ -23,6 +24,15 @@
                         :source-paths ["src" "test"]
                         :compiler {:output-to "target/testable.js"
                                    :optimizations :whitespace
+                                   :cache-analysis false
+                                   :pretty-print true}}
+                       {:id "examples"
+                        :source-paths ["src" "examples/src"]
+                        :compiler {:output-to "examples/out/main.js"
+                                   :output-dir "examples/out"
+                                   :main examples.core
+                                   :asset-path "out"
+                                   :optimizations :advanced
                                    :cache-analysis false
                                    :pretty-print true}}
                        {:id "dropdown"
